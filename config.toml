@@ -1,0 +1,3 @@
+baseURL = 'http://strexicious.github.io/'
+title = 'do you see any code?'
+theme = "terminal"
