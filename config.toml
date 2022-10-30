@@ -1,3 +1,12 @@
 baseURL = 'http://strexicious.github.io/'
 title = 'do you see any code?'
 theme = "terminal"
+
+[params]
+contentTypeName = "algorithms"
+
+[params.logo]
+logoText = "no coding"
+
+[languages.en]
+readMore = "go in"
