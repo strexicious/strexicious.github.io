@@ -153,11 +153,22 @@ Well nothing and everything. It depends on the experiences of the reader. The
 discussion up to this point has been to reel in the readers who have been taught
 that software engineering is about designing systems from top to bottom,
 starting with higher up abstractions that are closer to _user_'s notions and
-intuitions rather than having you focusing on the solution _you_ must implement.
-(The people who teach and have been taught to use UML diagrams to "engineer"
-systems, for example.) But in my experience that is the wrong approach to
-problem solve, and in my opinion, especially in engineering fields. (I have
-tried that top-down approach many times. From Java and C++ to Rust and Haskell.)
+intuitions rather than having you focusing on the solutions _you_ must implement.
+
+What Go then emphasises for software engineers is that they should focus on the
+problem at hand, giving them liberty in how to use plain-old data and making
+them use their own judgement if a given code has interpretation that could be
+considered valid. (Maybe, someone someday does find it useful for their code
+to call `pet(&Human{})` in their problem domain.)
+
+I have tried top to bottom approaches in the past different languages, from Java
+and C++ to Rust and Haskell. But I find it more productive to worry about using
+my data correctly because it lets me focus on solving the problem at hand, than
+to think about how to create a world model in which I can then restate my
+problem and finally find a nice solution. Unless a model for your problem
+already exists (that is, a library), creating world models just adds an overhead
+to the engineering process, especially when the requirements of the system keep
+changing day to day.
 
 ## Problem solving and Go code
 
@@ -179,17 +190,9 @@ you only need specific properties of the data, and you can solve a generic
 problem by generalising the data in your problem statement, then you can obtain
 a generic solution.
 
-To be less abstract, and finally make my point clearly, when implementing a
-function, start with concrete types in parameters, and if you find that you
-need only specific methods of the input data, then you can make an interface
-to substitute the concrete type.
-
-So how does this help with `pet(&Human{})`? Well, it does not. In Go, it is the
-responsibility of the caller of `pet` to not call it with some variable for
-which it does not make much sense. And I find it to be more productive to worry
-about using my data correctly because it lets me focus on solving the problem
-at hand, than to think about how to create a perfect world model in which I can
-then restate my problem and find a nice solution. It is a good thing to try to
-find an existing world model in which your problem can solved more simply. (Basically looking for an existing library.) But if that world model has not
-been implemented, just use the tools at your disposal. And at the minimum, functions and plain-old-data types are always there, and those are the tools
-that any new programmer and software engineer is taught from the get go.
+In conclusion, and to be less abstract, and finally make my point clearly, when
+**implementing** a function, start with concrete types in parameters, and if you
+find that you need only specific methods of the input data, then you can make an
+interface to substitute the concrete type. And when **using** a function that
+accepts an interface and you have a concrete type that satisfies such an
+interface, verify yourself, as an engineer, if semantics of such code are valid.
