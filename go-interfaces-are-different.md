@@ -96,7 +96,7 @@ type Stringer interface {
 ```
 
 This is a method set not associated to any type. In this case, it just declares
-a method named `String` with no paramters and return type `string`.
+a method named `String` with no parameters and return type `string`.
 
 ## How is `Airplane` not an `Animal`?
 
@@ -114,7 +114,7 @@ and does not return anything, then `Airplane` is considered an `Animal`
 according to Go. But it is unlikely that `Airplane` has a method named `Walk`.
 
 This is how Go interfaces work. They are implicitly "attached" to types. And so,
-let us consider again the `pet_adoption` package, and examine a weird quirk of
+let us consider again the `pet_simulator` package, and examine a weird quirk of
 how Go intends for us to use the interfaces. To clarify, the package looks like
 this with our `Animal` interface better defined now:
 
@@ -165,13 +165,13 @@ Instead of trying to explain what problem solving I am talking about, I will
 just refer to George Pólya's amazing [problem solving list](https://sass.queensu.ca/sites/sasswww/files/uploaded_files/Resource%20PDFs/polya.pdf).
 (One could say we are talking about pure logical, deductive problem solving here.)
 
-Particularly, the resemblence between problem solving and coding is that solving
+Particularly, the resemblance between problem solving and coding is that solving
 a problem equates to implementing a function. The function declaration
 (including the properties asserted in the doc comment) is a statement of the
 problem. The process of implementing the function is the process of finding
 the solution.
 
-The paramater data types of the function are the given data for a problem. More
+The parameter data types of the function are the given data for a problem. More
 often than not, when you are solving a problem for the first time, you will
 use concrete data, more specialised input data forms to solve your problem.
 After you have solved your problem, or in the process, you may realise that
