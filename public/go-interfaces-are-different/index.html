@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Interfaces Are Different</title>
+    <link href="/main.css" rel="stylesheet">
+  </head>
+  <body>
+    <h1 id="go-interfaces-are-different">Go Interfaces Are Different</h1>
+<p>Different to what? Well, compared to most other languages. Although they are
+named &ldquo;interfaces&rdquo;, they are not to be (or rather, must not be) used in the same
+manner as promoted in other languages.</p>
+<h2 id="the-manners-of-other-languages">The manners of other languages</h2>
+<p>In other languages you if you want a cat to be an animal, the concept of animal
+must be defined, and then definition of cat must explicitly declare that a cat
+is an animal. In principle, this explicitness, sounds like a good thing to
+require.</p>
+<pre tabindex="0"><code>// in some not go language
+// an animal-kingdom package
+
+interface Animal {
+  ...
+}
+
+class Cat extends Animal {
+  ...
+}
+</code></pre><p>Before we move onto how Go interfaces are intended to be used, let&rsquo;s look at
+how might a user of this package use these definitions, so that we have a point
+of comparison for Go.</p>
+<pre tabindex="0"><code>// in some not go language
+// a pet-simulator package
+
+void pet(Animal a) { ... }
+</code></pre><h2 id="gos-manners">Go&rsquo;s manners</h2>
+<p>Let&rsquo;s quickly look at how the same code in Go would be separated.</p>
+<pre tabindex="0"><code>package animal_kingdom
+
+type Cat struct {
+  ...
+}
+</code></pre><p>And then&hellip;</p>
+<pre tabindex="0"><code>package pet_simulator
+
+type Animal interface {
+  ...
+}
+
+func pet(Animal a) { ... }
+</code></pre><p>Do you see anything funny? (If not, take a closer look at how the code is
+organised.) What&rsquo;s going on?</p>
+<p>So basically, in Go, the implementer of <code>pet_simulator</code> defines the interface
+that it wants to use. But the implementer of <code>pet_simulator</code> is a user of the
+<code>animal_kingdom</code> package, and as such, the definition of cat can never explicitly
+say that it is an animal since it does not know who the user will be a priori.</p>
+<p>To summarise: in Go the <em>user</em> of some code is suppose to provide an
+abstraction for some other code, <em>not</em> the <em>implementer</em> of that other code.</p>
+<p>But then how does Go know that something like <code>type Airplane struct { ...}</code> is
+not an animal? Well let&rsquo;s get a bit technical now (but I am no expert)&hellip;</p>
+<h2 id="method-sets">Method sets</h2>
+<p>In Go, each type has a method set. To quickly illustrate, in the following,
+<code>M1</code> and <code>M2</code> are in the method set of <code>T</code>.</p>
+<pre tabindex="0"><code>type T { ... }
+
+func (T) M1() { ... }
+func (T) M2() { ... }
+</code></pre><p>And when you define an interface in Go, you are basically defining a method
+set that is not tied to any type. To give a quick example, let&rsquo;s look at a
+standard library interface:</p>
+<pre tabindex="0"><code>type Stringer interface {
+  String() string
+}
+</code></pre><p>This is a method set not associated to any type. In this case, it just declares
+a method named <code>String</code> with no parameters and return type <code>string</code>.</p>
+<h2 id="how-is-airplane-not-an-animal">How is <code>Airplane</code> not an <code>Animal</code>?</h2>
+<p>Well in the previous discussion we have been ignoring the definition of
+<code>Animal</code>. Suppose it looks something like this:</p>
+<pre tabindex="0"><code>type Animal interface {
+  Walk(distance float64)
+}
+</code></pre><p>Now, if <code>Airplane</code> has a method named <code>Walk</code> that accepts a single <code>float64</code>
+and does not return anything, then <code>Airplane</code> is considered an <code>Animal</code>
+according to Go. But it is unlikely that <code>Airplane</code> has a method named <code>Walk</code>.</p>
+<p>This is how Go interfaces work. They are implicitly &ldquo;attached&rdquo; to types. And so,
+let us consider again the <code>pet_simulator</code> package, and examine a weird quirk of
+how Go intends for us to use the interfaces. To clarify, the package looks like
+this with our <code>Animal</code> interface better defined now:</p>
+<pre tabindex="0"><code>package pet_simulator
+
+type Animal interface {
+  Walk(distance float64)
+}
+
+func pet(Animal a) { ... }
+</code></pre><p>And we are going to consider another package now:</p>
+<pre tabindex="0"><code>package human_simulator
+
+type Human struct {
+  ...
+}
+
+func (h *Human) Walk(distance float64) { ... }
+</code></pre><p>And apparently now the following code is valid: <code>pet(&amp;Human{})</code>. What the
+flip-flops weeb stuff is going on here?? This is terrible! If only we could
+let the implementer of cat explicitly declare itself as an animal from animal
+kingdom then this would never happen! Go interfaces suck!</p>
+<h2 id="hold-on-dont-jump-to-conclusions-yet">Hold on&hellip; don&rsquo;t jump to conclusions yet</h2>
+<p>So what went wrong in the preceding discussion?</p>
+<p>Well nothing and everything. It depends on the experiences of the reader. The
+discussion up to this point has been to reel in the readers who have been taught
+that software engineering is about designing systems from top to bottom,
+starting with higher up abstractions that are closer to <em>user</em>&rsquo;s notions and
+intuitions rather than having you focusing on the solutions <em>you</em> must implement.</p>
+<p>What Go then emphasises for software engineers is that they should focus on the
+problem at hand, giving them liberty in how to use plain-old data and making
+them use their own judgement if a given code has interpretation that could be
+considered valid. (Maybe, someone someday does find it useful for their code
+to call <code>pet(&amp;Human{})</code> in their problem domain.)</p>
+<p>I have tried top to bottom approaches in the past different languages, from Java
+and C++ to Rust and Haskell. But I find it more productive to worry about using
+my data correctly because it lets me focus on solving the problem at hand, than
+to think about how to create a world model in which I can then restate my
+problem and finally find a nice solution. Unless a model for your problem
+already exists (that is, a library), creating world models just adds an overhead
+to the engineering process, especially when the requirements of the system keep
+changing day to day.</p>
+<h2 id="problem-solving-and-go-code">Problem solving and Go code</h2>
+<p>Instead of trying to explain what problem solving I am talking about, I will
+just refer to George Pólya&rsquo;s amazing <a href="https://sass.queensu.ca/sites/sasswww/files/uploaded_files/Resource%20PDFs/polya.pdf">problem solving list</a>.
+(One could say we are talking about pure logical, deductive problem solving here.)</p>
+<p>Particularly, the resemblance between problem solving and coding is that solving
+a problem equates to implementing a function. The function declaration
+(including the properties asserted in the doc comment) is a statement of the
+problem. The process of implementing the function is the process of finding
+the solution.</p>
+<p>The parameter data types of the function are the given data for a problem. More
+often than not, when you are solving a problem for the first time, you will
+use concrete data, more specialised input data forms to solve your problem.
+After you have solved your problem, or in the process, you may realise that
+you only need specific properties of the data, and you can solve a generic
+problem by generalising the data in your problem statement, then you can obtain
+a generic solution.</p>
+<p>In conclusion, and to be less abstract, and finally make my point clearly, when
+<strong>implementing</strong> a function, start with concrete types in parameters, and if you
+find that you need only specific methods of the input data, then you can make an
+interface to substitute the concrete type. And when <strong>using</strong> a function that
+accepts an interface and you have a concrete type that satisfies such an
+interface, verify yourself, as an engineer, if semantics of such code are valid.</p>
+
+  </body>
+</html>

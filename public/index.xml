@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>computing, systems, maths and physics</title>
+    <link>http://localhost:1313/</link>
+    <description>Recent content on computing, systems, maths and physics</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 07 Apr 2025 15:13:17 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Go Interfaces Are Different</title>
+      <link>http://localhost:1313/go-interfaces-are-different/</link>
+      <pubDate>Mon, 07 Apr 2025 15:13:17 +0200</pubDate>
+      <guid>http://localhost:1313/go-interfaces-are-different/</guid>
+      <description>&lt;h1 id=&#34;go-interfaces-are-different&#34;&gt;Go Interfaces Are Different&lt;/h1&gt;&#xA;&lt;p&gt;Different to what? Well, compared to most other languages. Although they are&#xA;named &amp;ldquo;interfaces&amp;rdquo;, they are not to be (or rather, must not be) used in the same&#xA;manner as promoted in other languages.&lt;/p&gt;&#xA;&lt;h2 id=&#34;the-manners-of-other-languages&#34;&gt;The manners of other languages&lt;/h2&gt;&#xA;&lt;p&gt;In other languages you if you want a cat to be an animal, the concept of animal&#xA;must be defined, and then definition of cat must explicitly declare that a cat&#xA;is an animal. In principle, this explicitness, sounds like a good thing to&#xA;require.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
